@@ -3,7 +3,7 @@ import inquirer from 'inquirer'
 import fs from 'fs'
 import generateMarkdown from './utils/generateMarkdown.js';
 // TODO: Create an array of questions for user input
-const questions = ["What is the name you would like to attach to this project?", "How would someone contact you if they have question, comments, etc.?", "What is the title of the project?", "What is the project for?", "How would someone install this project?", "How is this project used once installed?", "What is the license you're using?", "What's the link to that License"];
+const questions = ["What is the name you would like to attach to this project?", "How would someone contact you if they have question, comments, etc.?", "What is the title of the project?", "What is the project for?", "How would someone install this project?", "How is this project used once installed?", "Choose a software license:"];
 
 // TODO: Create a function to write README file
 function writeToFile(fileName, data) {
@@ -39,12 +39,10 @@ function init() {
             message: questions[5]
         },
         {
+            type: "list",
             name: "license",
-            message: questions[6]
-        },
-        {
-            name: "link",
-            message: questions[7]
+            message: questions[6],
+            choices: ["MIT", "GPL", "Apache", "BSD", "MPL", "CC0"]
         }
 
     ]).then((response) => 
@@ -57,13 +55,8 @@ function init() {
                 description: response.description,
                 installation: response.installation,
                 usage: response.usage,
-                license:
-                {
-                    name: response.license,
-                    link: response.link
-                }
+                license: response.license
             }
-            console.log(data)
             writeToFile("README.md", generateMarkdown(data))
         })
 }
